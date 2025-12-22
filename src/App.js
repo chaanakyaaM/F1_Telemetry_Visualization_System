@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Api from "./components/Api";
 import track_path from "./track_path";
+import path from "./track2"
 
 export default function App() {
 
@@ -36,27 +37,28 @@ export default function App() {
   return (
     <div style={{ background: "#0f172a", height: "100vh" }}>
       <Api />
-      <input type="range" min="0" max="500" name="slider" onChange={(e) => setSpeed(e.target.value)}/>
+      <input type="range" min="0" max="1500" name="slider" onChange={(e) => setSpeed(e.target.value)}/>
         <svg
-  viewBox="0 0 800 450"
-  style={{
-    width: "100vw",
-    height: "100vh",
-    background: "#111",
-  }}
-  preserveAspectRatio="xMidYMid meet"
+        viewBox="-700 -4000 10000 15000"
+
+        style={{
+          width: "100vw",
+          height: "100vh",
+          background: "#111",
+        }}
+        preserveAspectRatio="xMidYMid meet"
 >
 
-        <path d={track_path}
+        <path d={path}
         ref={pathRef}
           fill="none"
             stroke="white"
-            strokeWidth="6"/>
+            strokeWidth="10"/>
 
         <circle
           cx={point.x}
           cy={point.y}
-          r="8"
+          r="80"
           fill="#ef4444"
         />
         <circle
