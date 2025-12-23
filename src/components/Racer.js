@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
+// import data from "./data.js";
 
 // components/Racer.jsx
 export default function Racer({
   driver_id,
   raceTime,
   color = "#ef4444",
+  show_names = false
 }) {
+  const [random,setRandom] = useState(() => Math.random() * 100 + 200);
   const [telemetry, setTelemetry] = useState([]);
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/driver/${driver_id}`)
@@ -48,12 +51,27 @@ export default function Racer({
   const point = getPointAtTime(telemetry, raceTime);
 
   return (
+    <>
     <circle
       cx={point.x}
       cy={point.y}
       r={80}
       fill={color}
-      opacity={0.8}
+      opacity={0.9}
+      stroke="white"       
+  strokeWidth={5} 
     />
+    {show_names && 
+            <text
+            x={point.x + random}
+            y={point.y - random} // position above the circle
+            fill="white"
+            fontSize="150"
+            textAnchor="middle"
+        >
+            {driver_id}
+        </text>
+    }
+    </>
   );
 }
