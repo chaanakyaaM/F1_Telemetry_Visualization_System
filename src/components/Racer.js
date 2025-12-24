@@ -113,7 +113,7 @@ export default function Racer({
   if (!updateRacersData) return;
 
   updateRacersData(
-    driver_id,                 // ✅ KEEP ID
+    driver_id,                 
     Math.round(point.speed),
     color,
     images[driver_id],
