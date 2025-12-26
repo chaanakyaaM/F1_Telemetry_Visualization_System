@@ -207,12 +207,12 @@
 //     </MainContainer>
 //   );
 // }
+
 import Track from "./components/Track";
 import { useState, useCallback, useRef, useEffect } from "react";
 import Racer from "./components/Racer";
 import MainContainer from "./components/MainContainer";
 import Dashboard from "./components/Dashboard";
-import DetailsContainer from "./components/DetailsContainer";
 import RaceDetailsContainer from "./components/RaceDetailsContainer";
 import colors from "./components/Colors";
 
@@ -238,7 +238,14 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const driverList = ["VER","HAM","PER","LEC","RUS","SAI","NOR","ALO","OCO","ZHO","PIA"];
+  // const driverList = ["VER","HAM","PER","LEC","RUS","SAI","NOR","ALO","OCO","ZHO","PIA"];
+  const driverList = ["VER","HAM"];
+  const year = 2023;
+  const event = "Bahrain";
+  const session = "R";
+  const event2 = "Austria"
+
+  const year2= 2021
 
   return (
     <MainContainer>
@@ -247,21 +254,24 @@ export default function App() {
         onClick={(driver_id) => setSelectedDriver(driver_id)} 
       />
 
-      <RaceDetailsContainer event={"Bahrain"} year={2023} session={"R"} />
+      <RaceDetailsContainer event={event} year={year} session={session} SelectedDriver={selectedDriver}
+        driverData={selectedDriver ? racersDataRef.current[selectedDriver] : null} />
 
-      <DetailsContainer
+      {/* <DetailsContainer
         SelectedDriver={selectedDriver}
         driverData={selectedDriver ? racersDataRef.current[selectedDriver] : null}
-      />
+      /> */}
 
-      <Track set_show={setShow} set_raceTime={setRaceTime} show={show}>
-        {driverList.map((driver_id, ind) => (
+      <Track set_show={setShow} set_raceTime={setRaceTime} show={show} year={year2} event_name={event2}>
+        {driverList && driverList.map((driver_id, ind) => (
           <Racer
             key={driver_id}
             driver_id={driver_id}
             raceTime={raceTime}
             color={colors[ind]}
             show_names={show}
+            year={year2}
+            event_name={event2}
             updateRacersData={updateRacersData}
             onClick={() => setSelectedDriver(driver_id)}
           />

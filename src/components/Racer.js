@@ -8,14 +8,17 @@ export default function Racer({
   color = "#ef4444",
   show_names = false,
   updateRacersData,
-  onClick
+  onClick,
+  year,
+  event_name
+
 }) {
   const [telemetry, setTelemetry] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
 
-    fetch(`http://127.0.0.1:8000/driver/${driver_id}`)
+    fetch(`http://127.0.0.1:8000/driver/${year}/${event_name}/${driver_id}`)
       .then((res) => res.json())
       .then((data) => {
         if (!cancelled) {

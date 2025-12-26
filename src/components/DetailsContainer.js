@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 
 export default function DetailsContainer({ SelectedDriver, driverData }) {
   if (!SelectedDriver || !driverData) return null;
