@@ -1,68 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
+import names from "./Names";
+import images from "./Images";
 
 export default function Racer({
   driver_id,
   raceTime,
   color = "#ef4444",
   show_names = false,
-  updateRacersData 
+  updateRacersData,
+  onClick
 }) {
-  const [random] = useState(() => Math.random() * 100 + 200);
   const [telemetry, setTelemetry] = useState([]);
-  const names = {
-  VER: "Max Verstappen",
-  PER: "Sergio Pérez",
-  HAM: "Lewis Hamilton",
-  RUS: "George Russell",
-  LEC: "Charles Leclerc",
-  SAI: "Carlos Sainz",
-  NOR: "Lando Norris",
-  PIA: "Oscar Piastri",
-  ALO: "Fernando Alonso",
-  STR: "Lance Stroll",
-  OCO: "Esteban Ocon",
-  GAS: "Pierre Gasly",
-  ALB: "Alexander Albon",
-  SAR: "Logan Sargeant",
-  TSU: "Yuki Tsunoda",
-  BOT: "Valtteri Bottas",
-  ZHO: "Zhou Guanyu",
-  MAG: "Kevin Magnussen",
-  HUL: "Nico Hülkenberg",
-  DEV: "Nyck de Vries",
-  RIC: "Daniel Ricciardo",
-  LAW: "Liam Lawson",
-  MSC: "Mick Schumacher",
-  LAT: "Nicholas Latifi",
-    };
-  
-  const images = {
-    VER: "Max Verstappen.png",
-    PER: "Sergio Pérez.png",
-    HAM: "Lewis Hamilton.png",
-    RUS: "George Russell.png",
-    LEC: "Carlos Sainz.png",
-    SAI: "Carlos Sainz.png",
-    NOR: "Lando Norris.png",
-    PIA: "Carlos Sainz.png",
-    ALO: "Fernando Alonso.png",
-    STR: "Carlos Sainz.png",
-    OCO: "Carlos Sainz.png",
-    GAS: "Sergio Pérez.png",
-    ALB: "Lewis Hamilton.png",
-    SAR: "Carlos Sainz.png",
-    TSU: "Carlos Sainz.png",
-    BOT: "Lewis Hamilton.png",
-    ZHO: "Sergio Pérez.png",
-    MAG: "Carlos Sainz.png",
-    HUL: "Max Verstappen.png",
-    DEV: "Carlos Sainz.png",
-    RIC: "Max Verstappen.png",
-    LAW: "Lewis Hamilton.png",
-    MSC: "Sergio Pérez.png",
-    LAT: "Max Verstappen.png",
-  }
-
 
   useEffect(() => {
     let cancelled = false;
@@ -85,7 +33,7 @@ export default function Racer({
 
   const point = useMemo(() => {
     if (!telemetry.length) {
-      return { x: 0, y: 0, speed: 0 };
+      return { x: 0, y: 0, speed: 0, ngear: 0};
     }
 
     for (let i = 0; i < telemetry.length - 1; i++) {
@@ -101,12 +49,13 @@ export default function Racer({
           speed:
             telemetry[i].Speed +
             r * (telemetry[i + 1].Speed - telemetry[i].Speed),
+          ngear: telemetry[i].nGear
         };
       }
     }
 
     const last = telemetry[telemetry.length - 1];
-    return { x: last.X, y: last.Y, speed: last.Speed };
+    return { x: last.X, y: last.Y, speed: last.Speed, ngear:last.ngear || 0 };
   }, [telemetry, raceTime]);
 
   useEffect(() => {
@@ -118,13 +67,14 @@ export default function Racer({
     color,
     images[driver_id],
     names[driver_id],
-
+    point.ngear
   );
 }, [
   driver_id,
   point.speed,
   color,
   updateRacersData,
+  point.ngear
 ]);
 
   return (
@@ -137,6 +87,7 @@ export default function Racer({
         opacity={0.9}
         stroke="white"
         strokeWidth={5}
+        onClick={onClick}
       />
 
       {show_names && (
@@ -153,19 +104,21 @@ export default function Racer({
         <foreignObject
           x={point.x + 490}
           y={point.y - 90}
-          width={1000}
-          height={180}
+          width={1200}
+          height={200}
         >
           <div
             style={{
               color: "black",
+              display:"flex",
+              alignItems:"center",
+              justifyContent:"center",
               border: "5px solid #333",
               borderRadius: "100px",
               background: "white",
               padding: "10px",
-              paddingLeft: "100px",
               fontFamily: "Arial",
-              fontSize: "100px",
+              fontSize: "700%",
             }}
           >
             <strong>{names[driver_id]}</strong>
