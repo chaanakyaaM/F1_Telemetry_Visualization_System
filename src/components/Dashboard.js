@@ -5,7 +5,7 @@ export default function Dashboard({ racersData, onClick }) {
         <div 
           key={racer.driver_id} 
           onClick={() => onClick(racer.driver_id)} 
-          className="flex items-center gap-2 mb-2 bg-black border-[1px] border-white rounded-[10px] p-2 pl-3 pr-3  cursor-pointer"
+          className="flex items-center gap-2 mb-1 bg-black border-[2px] border-white rounded-[10px] p-1 pl-3 pr-3  cursor-pointer"
         >
           <div
             className="h-5 w-5 rounded-[20px]"

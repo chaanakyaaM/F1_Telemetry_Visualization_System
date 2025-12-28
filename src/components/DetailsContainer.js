@@ -8,7 +8,6 @@ export default function DetailsContainer({ SelectedDriver, driverData }) {
       <img 
         src={`../assets/${driverData.image_path}`} 
         alt={driverData.name} 
-        // style={{ height: "52px", width: "52px" }}
         className="h-[120px] w-[120px] border-2 border-white rounded-[10px]"
       />
       <div>

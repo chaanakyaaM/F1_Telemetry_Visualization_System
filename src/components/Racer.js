@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import names from "./Names";
-import images from "./Images";
+import names from "../constants/Names";
+import images from "../constants/Images";
 
 export default function Racer({
   driver_id,
