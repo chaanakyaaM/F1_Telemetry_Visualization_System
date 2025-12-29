@@ -7,57 +7,69 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
   const speedRef = useRef(1);
 
   const [playing, setPlaying] = useState(true);
+  const [loading,setLoading] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
-  // Sync speed state to ref so the loop can read it without adding it to dependencies
   useEffect(() => {
     speedRef.current = playbackSpeed;
   }, [playbackSpeed]);
 
   useEffect(() => {
-    // 1. If paused, stop here. This breaks the loop cleanly.
     if (!playing) {
       lastTimeRef.current = null;
       return;
     }
 
     const animate = (time) => {
-      // 2. Initialize lastTimeRef on the first frame of a sequence
       if (lastTimeRef.current === null) {
         lastTimeRef.current = time;
       }
 
-      // Calculate time passed since last frame
       const delta = time - lastTimeRef.current;
       lastTimeRef.current = time;
 
-      // 3. Safe update using the ref for speed
       set_raceTime((t) => t + delta * speedRef.current);
-
       requestRef.current = requestAnimationFrame(animate);
     };
 
     requestRef.current = requestAnimationFrame(animate);
-
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [playing, set_raceTime]); 
-  
+  }, [playing, set_raceTime]);
+
   const handleReset = () => {
-    lastTimeRef.current = null; 
+    lastTimeRef.current = null;
     set_raceTime(0);
   };
 
   return (
-    <div style={{ background: "#0f172a", height: "100vh", color: "white" }}>
-      <div style={{ padding: 10, display: "flex", gap: 10 }}>
-        <button onClick={() => setPlaying((p) => !p)}>
-          {playing ? "Pause" : "Play"}
+    <div className="relative w-full h-full bg-slate-950 flex flex-col overflow-hidden">
+      
+      <div className="flex-1 w-full h-full relative py-20 px-15 transition-all duration-500">
+        <Path year={year} event_name={event_name} setLoading={setLoading}>
+          {children}
+        </Path>
+      </div>
+
+      <div className="absolute top-1 left-1/2 -translate-x-1/2 flex items-center gap-6 px-8 py-4 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl z-50 transition-all hover:border-slate-500">
+        
+        <button 
+          onClick={() => setPlaying((p) => !p)}
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-red-600 hover:bg-red-700 transition-all active:scale-90 shadow-lg shadow-red-900/40"
+        >
+          {playing ? (
+            <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          ) : (
+            <svg className="w-6 h-6 fill-white translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          )}
         </button>
 
-        <label>
-          Speed {playbackSpeed}x
+        <div className="flex flex-col min-w-[140px]">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Speed Multiplier</span>
+            <span className="text-xs font-mono text-red-500 font-bold">{playbackSpeed}x</span>
+          </div>
           <input
             type="range"
             min="0"
@@ -65,16 +77,48 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
             step="1"
             value={playbackSpeed}
             onChange={(e) => setPlaybackSpeed(+e.target.value)}
+            className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-red-600 border border-slate-700"
           />
-        </label>
+        </div>
 
-        <button onClick={handleReset}>Reset</button>
-        <button onClick={() => set_show(!show)}>
-          {show ? "Hide Names" : "Show Names"}
-        </button>
+        <div className="h-10 w-[1px] bg-slate-800 mx-2" />
+
+        <div className="flex gap-3">
+          <button 
+            onClick={handleReset}
+            className="px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all border border-transparent hover:border-slate-700"
+          >
+            Reset
+          </button>
+          
+          <button 
+            onClick={() => set_show(!show)}
+            className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all border shadow-sm ${
+              show 
+                ? "bg-white text-black border-white" 
+                : "text-slate-400 border-slate-800 hover:border-slate-600"
+            }`}
+          >
+            {show ? "Hide Labels" : "Show Labels"}
+          </button>
+        </div>
       </div>
 
-      <Path year={year} event_name={event_name}>{children}</Path>
+      <div className="absolute top-6 left-8 pointer-events-none">
+        <div className="flex items-center gap-3">
+          {loading ? (
+            <>
+            <div className="w-1 h-6 bg-red-600 animate-pulse" />
+            <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.loading'}</span>
+            </>
+          ):(
+            <>
+            <div className="w-1 h-6 bg-green-600 animate-pulse" />
+            <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.Ready'}</span>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

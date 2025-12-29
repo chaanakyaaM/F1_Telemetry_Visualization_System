@@ -31,26 +31,18 @@ export default function Racer({
         return {
           x: telemetry[i].X + r * (telemetry[i + 1].X - telemetry[i].X),
           y: telemetry[i].Y + r * (telemetry[i + 1].Y - telemetry[i].Y),
-          speed:
-            telemetry[i].Speed +
-            r * (telemetry[i + 1].Speed - telemetry[i].Speed),
+          speed: telemetry[i].Speed + r * (telemetry[i + 1].Speed - telemetry[i].Speed),
           ngear: telemetry[i].nGear || 0
         };
       }
     }
 
     const last = telemetry[telemetry.length - 1];
-    return {
-      x: last.X,
-      y: last.Y,
-      speed: last.Speed,
-      ngear: last.nGear || 0
-    };
+    return { x: last.X, y: last.Y, speed: last.Speed, ngear: last.nGear || 0 };
   }, [telemetry, raceTime]);
 
   useEffect(() => {
     if (!updateRacersData || !point) return;
-
     updateRacersData(
       driver_id,
       Math.round(point.speed),
@@ -64,21 +56,20 @@ export default function Racer({
   if (loading || error || !point) return null;
 
   return (
-    <>
+    <g className="transition-all duration-300 ease-linear">
       <circle
         cx={point.x}
         cy={point.y}
-        r={80}
+        r={85}
         fill={color}
-        opacity={0.9}
-        stroke="white"
-        strokeWidth={5}
+        stroke="#ffffff"
+        strokeWidth={10}
         onClick={onClick}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))" }}
       />
 
       {show_names && (
-        <>
+        <g>
           <line
             x1={point.x}
             y1={point.y}
@@ -87,31 +78,44 @@ export default function Racer({
             stroke="white"
             strokeWidth={10}
           />
+          
           <foreignObject
             x={point.x + 490}
             y={point.y - 90}
-            width={1200}
-            height={250}
+            width={2000}
+            height={500}
           >
             <div
+              className="flex items-center"
               style={{
-                color: "black",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "5px solid #333",
-                borderRadius: "100px",
-                background: "white",
-                padding: "10px",
-                fontSize: "800%",
-                fontWeight: "bold"
+                fontFamily: "sans-serif",
+                filter: "drop-shadow(5px 5px 15px rgba(0,0,0,0.5))"
               }}
             >
-              {driverNames?.[driver_id] || driver_id}
+
+              <div
+                style={{
+                  background: "rgba(0, 0, 0)",
+                  width: 1500,
+                  color: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "20px 50px",
+                  fontSize: "120px",
+                  fontWeight: "900",
+                  textTransform: "uppercase",
+                  letterSpacing: "-2px",
+                  border: "5px solid white",
+                  borderRadius: "50px",
+                }}
+              >
+                {driverNames?.[driver_id] || driver_id}
+              </div>
             </div>
           </foreignObject>
-        </>
+        </g>
       )}
-    </>
+    </g>
   );
 }
