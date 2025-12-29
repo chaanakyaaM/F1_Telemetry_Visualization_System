@@ -1,4 +1,4 @@
-export default function Dashboard({ racersData, onClick }) {
+export default function Dashboard({ racersData, driverNames, onClick }) {
   return (
     <div className="absolute mt-9 bg-transparent p-4 right-0">
       {Object.values(racersData).map(racer => (
@@ -13,7 +13,7 @@ export default function Dashboard({ racersData, onClick }) {
           />
           <div className="flex flex-col gap-1">
             <div style={{ color: "white", fontSize: "13px" }}>
-              {racer.name}
+              {driverNames[racer.driver_id]}
             </div>
           </div>
         </div>

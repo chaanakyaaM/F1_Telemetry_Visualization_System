@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
-import names from "../constants/Names";
+import { useEffect, useMemo } from "react";
 import images from "../constants/Images";
+import { useDriverTelemetry } from "../hooks/useDriverTelemetry";
 
 export default function Racer({
   driver_id,
@@ -10,34 +10,17 @@ export default function Racer({
   updateRacersData,
   onClick,
   year,
+  driverNames,
   event_name
-
 }) {
-  const [telemetry, setTelemetry] = useState([]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch(`http://127.0.0.1:8000/driver/${year}/${event_name}/${driver_id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!cancelled) {
-          setTelemetry(data?.data ?? []);
-        }
-      })
-      .catch((err) =>
-        console.error("Error fetching telemetry:", err)
-      );
-
-    return () => {
-      cancelled = true;
-    };
-  }, [driver_id]);
+  const { telemetry, loading, error } = useDriverTelemetry({
+    driver_id,
+    year,
+    event_name
+  });
 
   const point = useMemo(() => {
-    if (!telemetry.length) {
-      return { x: 0, y: 0, speed: 0, ngear: 0};
-    }
+    if (!telemetry.length || telemetry.length < 2) return null;
 
     for (let i = 0; i < telemetry.length - 1; i++) {
       const t1 = telemetry[i].Time_sec * 1000;
@@ -45,40 +28,40 @@ export default function Racer({
 
       if (raceTime >= t1 && raceTime <= t2) {
         const r = (raceTime - t1) / (t2 - t1);
-
         return {
           x: telemetry[i].X + r * (telemetry[i + 1].X - telemetry[i].X),
           y: telemetry[i].Y + r * (telemetry[i + 1].Y - telemetry[i].Y),
           speed:
             telemetry[i].Speed +
             r * (telemetry[i + 1].Speed - telemetry[i].Speed),
-          ngear: telemetry[i].nGear
+          ngear: telemetry[i].nGear || 0
         };
       }
     }
 
     const last = telemetry[telemetry.length - 1];
-    return { x: last.X, y: last.Y, speed: last.Speed, ngear:last.ngear || 0 };
+    return {
+      x: last.X,
+      y: last.Y,
+      speed: last.Speed,
+      ngear: last.nGear || 0
+    };
   }, [telemetry, raceTime]);
 
   useEffect(() => {
-  if (!updateRacersData) return;
+    if (!updateRacersData || !point) return;
 
-  updateRacersData(
-    driver_id,                 
-    Math.round(point.speed),
-    color,
-    images[driver_id],
-    names[driver_id],
-    point.ngear
-  );
-}, [
-  driver_id,
-  point.speed,
-  color,
-  updateRacersData,
-  point.ngear
-]);
+    updateRacersData(
+      driver_id,
+      Math.round(point.speed),
+      color,
+      images[driver_id],
+      driverNames?.[driver_id],
+      point.ngear
+    );
+  }, [driver_id, point, color, updateRacersData, driverNames]);
+
+  if (loading || error || !point) return null;
 
   return (
     <>
@@ -91,43 +74,43 @@ export default function Racer({
         stroke="white"
         strokeWidth={5}
         onClick={onClick}
+        style={{ cursor: "pointer" }}
       />
 
       {show_names && (
         <>
-        <line
-          x1={point.x}
-          y1={point.y}
-          x2={point.x + 500}
-          y2={point.y}
-          stroke="white"
-          strokeWidth={10}
-        />
-
-        <foreignObject
-          x={point.x + 490}
-          y={point.y - 90}
-          width={1200}
-          height={200}
-        >
-          <div
-            style={{
-              color: "black",
-              display:"flex",
-              alignItems:"center",
-              justifyContent:"center",
-              border: "5px solid #333",
-              borderRadius: "100px",
-              background: "white",
-              padding: "10px",
-              fontFamily: "Arial",
-              fontSize: "700%",
-            }}
+          <line
+            x1={point.x}
+            y1={point.y}
+            x2={point.x + 500}
+            y2={point.y}
+            stroke="white"
+            strokeWidth={10}
+          />
+          <foreignObject
+            x={point.x + 490}
+            y={point.y - 90}
+            width={1200}
+            height={250}
           >
-            <strong>{names[driver_id]}</strong>
-          </div>
-        </foreignObject>
-      </>
+            <div
+              style={{
+                color: "black",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "5px solid #333",
+                borderRadius: "100px",
+                background: "white",
+                padding: "10px",
+                fontSize: "800%",
+                fontWeight: "bold"
+              }}
+            >
+              {driverNames?.[driver_id] || driver_id}
+            </div>
+          </foreignObject>
+        </>
       )}
     </>
   );

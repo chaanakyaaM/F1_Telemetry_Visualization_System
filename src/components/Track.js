@@ -42,9 +42,8 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [playing, set_raceTime]); // Only restart the effect if Play/Pause is toggled
-
-  // Helper to handle Reset cleanly
+  }, [playing, set_raceTime]); 
+  
   const handleReset = () => {
     lastTimeRef.current = null; 
     set_raceTime(0);
