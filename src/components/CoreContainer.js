@@ -5,13 +5,14 @@ import MainContainer from "./MainContainer";
 import Dashboard from "./Dashboard";
 import RaceDetailsContainer from "./RaceDetailsContainer";
 import colors from "../constants/Colors";
-import { useDrivers } from "../hooks/UseDrivers";
+import { useDrivers } from "../hooks/useDrivers";
 import { useRacersDashboard } from "../hooks/useRacerDashboard";
 
 export default function CoreContainer({ year, event_name, session_name }) {
   const [raceTime, setRaceTime] = useState(0);
   const [show, setShow] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState(null);
+  const [raceOption, setRaceOption] = useState('fastestLap');
 
   const { driverCodes, driverNames, loading } = useDrivers({
     year,
@@ -28,11 +29,13 @@ export default function CoreContainer({ year, event_name, session_name }) {
         set_raceTime={setRaceTime}
         show={show}
         year={year}
+        setOption={setRaceOption}
+        option={raceOption}
         event_name={event_name}
       >
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center text-white">
-            <p className="animate-pulse font-mono">Loading Telemetry...</p>
+            <p className="animate-pulse font-mono">Loading Drivers...</p>
           </div>
         ) : (
           driverCodes.map((driver_id, ind) => (
@@ -45,6 +48,7 @@ export default function CoreContainer({ year, event_name, session_name }) {
               show_names={show}
               year={year}
               event_name={event_name}
+              option={raceOption}
               updateRacersData={updateRacersData}
               onClick={() => setSelectedDriver(driver_id)}
             />
@@ -58,7 +62,7 @@ export default function CoreContainer({ year, event_name, session_name }) {
           year={year}
           session={session_name}
           SelectedDriver={selectedDriver}
-          driverData={selectedDriver ? racersDataRef.current[selectedDriver] : null}
+          driverData={selectedDriver ? dashboardData[selectedDriver] : null}
         />
 
         <Dashboard

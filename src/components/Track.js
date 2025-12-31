@@ -1,14 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import Path from "./Path";
 
-export default function Track({ children, set_show, set_raceTime, show, year, event_name }) {
+export default function Track({ 
+  children,
+  set_show,
+  set_raceTime, 
+  show, 
+  year, 
+  setOption,
+  option, 
+  event_name 
+}) {
   const requestRef = useRef(null);
   const lastTimeRef = useRef(null);
   const speedRef = useRef(1);
 
   const [playing, setPlaying] = useState(true);
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  
+  // 1. Added state for padding
+  const [trackPadding, setTrackPadding] = useState(1500);
 
   useEffect(() => {
     speedRef.current = playbackSpeed;
@@ -46,13 +58,13 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
   return (
     <div className="relative w-full h-full bg-slate-950 flex flex-col overflow-hidden">
       
-      <div className="flex-1 w-full h-full relative py-20 px-15 transition-all duration-500">
-        <Path year={year} event_name={event_name} setLoading={setLoading}>
+      <div className="flex-1 w-full h-full relative py-1 px-1 transition-all duration-500">
+        <Path year={year} event_name={event_name} setLoading={setLoading} padding={trackPadding}>
           {children}
         </Path>
       </div>
 
-      <div className="absolute top-1 left-1/2 -translate-x-1/2 flex items-center gap-6 px-8 py-4 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl z-50 transition-all hover:border-slate-500">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 flex items-center gap-6 px-5 py-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl z-50 transition-all hover:border-slate-500">
         
         <button 
           onClick={() => setPlaying((p) => !p)}
@@ -65,9 +77,9 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
           )}
         </button>
 
-        <div className="flex flex-col min-w-[140px]">
+        <div className="flex flex-col min-w-[120px]">
           <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Speed Multiplier</span>
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Speed</span>
             <span className="text-xs font-mono text-red-500 font-bold">{playbackSpeed}x</span>
           </div>
           <input
@@ -81,7 +93,23 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
           />
         </div>
 
-        <div className="h-10 w-[1px] bg-slate-800 mx-2" />
+        <div className="flex flex-col min-w-[120px]">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Padding</span>
+            <span className="text-xs font-mono text-blue-500 font-bold">{trackPadding}</span>
+          </div>
+          <input
+            type="range"
+            min="1000"
+            max="10000"
+            step="100"
+            value={trackPadding}
+            onChange={(e) => setTrackPadding(+e.target.value)}
+            className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600 border border-slate-700"
+          />
+        </div>
+
+        <div className="h-10 w-[1px] bg-slate-800 mx-1" />
 
         <div className="flex gap-3">
           <button 
@@ -101,20 +129,42 @@ export default function Track({ children, set_show, set_raceTime, show, year, ev
           >
             {show ? "Hide Labels" : "Show Labels"}
           </button>
+
+          <button 
+            onClick={() => setOption("fastestLap")}
+            className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all border shadow-sm ${
+              option === "fastestLap" 
+                ? "bg-red-600 text-white border-red-600" 
+                : "text-slate-400 border-slate-800 hover:border-slate-600"
+            }`}
+          >
+            Fastest
+          </button>
+
+          <button 
+            onClick={() => setOption("fullRace")}
+            className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all border shadow-sm ${
+              option === "fullRace" 
+                ? "bg-red-600 text-white border-red-600" 
+                : "text-slate-400 border-slate-800 hover:border-slate-600"
+            }`}
+          >
+            Race
+          </button>
         </div>
       </div>
 
-      <div className="absolute top-6 left-8 pointer-events-none">
+      <div className="absolute top-6 left-8 pointer-events-none z-40">
         <div className="flex items-center gap-3">
           {loading ? (
             <>
-            <div className="w-1 h-6 bg-red-600 animate-pulse" />
-            <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.loading'}</span>
+              <div className="w-1 h-6 bg-red-600 animate-pulse" />
+              <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.loading'}</span>
             </>
-          ):(
+          ) : (
             <>
-            <div className="w-1 h-6 bg-green-600 animate-pulse" />
-            <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.Ready'}</span>
+              <div className="w-1 h-6 bg-green-600 animate-pulse" />
+              <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.Ready'}</span>
             </>
           )}
         </div>
