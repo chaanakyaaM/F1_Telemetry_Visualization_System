@@ -47,7 +47,7 @@ export function useDrivers({ year, event_name, session_name }) {
     return () => {
       cancelled = true;
     };
-  }, [year, event_name, session_name, backendUrl]);
+  }, [year, event_name, session_name]);
 
   return { driverCodes, driverNames, loading, error };
 }
