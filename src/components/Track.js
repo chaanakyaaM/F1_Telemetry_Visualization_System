@@ -19,7 +19,6 @@ export default function Track({
   const [loading, setLoading] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   
-  // 1. Added state for padding
   const [trackPadding, setTrackPadding] = useState(1500);
 
   useEffect(() => {
@@ -95,12 +94,12 @@ export default function Track({
 
         <div className="flex flex-col min-w-[120px]">
           <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Padding</span>
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Zoom</span>
             <span className="text-xs font-mono text-blue-500 font-bold">{trackPadding}</span>
           </div>
           <input
             type="range"
-            min="1000"
+            min="500"
             max="10000"
             step="100"
             value={trackPadding}
@@ -149,7 +148,7 @@ export default function Track({
                 : "text-slate-400 border-slate-800 hover:border-slate-600"
             }`}
           >
-            Race
+            Full Race
           </button>
         </div>
       </div>

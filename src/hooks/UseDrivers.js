@@ -5,6 +5,8 @@ export function useDrivers({ year, event_name, session_name }) {
   const [driverNames, setDriverNames] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   useEffect(() => {
     if (!year || !event_name || !session_name) return;
@@ -17,7 +19,7 @@ export function useDrivers({ year, event_name, session_name }) {
 
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/getdrivers/${year}/${event_name}/${session_name}`
+          `${backendUrl}/getdrivers/${year}/${event_name}/${session_name}`
         );
 
         if (!res.ok) throw new Error();
@@ -45,7 +47,7 @@ export function useDrivers({ year, event_name, session_name }) {
     return () => {
       cancelled = true;
     };
-  }, [year, event_name, session_name]);
+  }, [year, event_name, session_name, backendUrl]);
 
   return { driverCodes, driverNames, loading, error };
 }

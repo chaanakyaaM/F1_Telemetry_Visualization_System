@@ -4,7 +4,7 @@ import { useEvents } from "../hooks/useEvents";
 
 export default function Home() {
   const [tempYear, setTempYear] = useState(2023);
-  const [tempEvent, setTempEvent] = useState("Bahrain");
+  const [tempEvent, setTempEvent] = useState("");
   const [tempSession, setTempSession] = useState("R");
 
   const { events, loading, error } = useEvents(tempYear);
@@ -16,16 +16,13 @@ export default function Home() {
   });
 
   const options = {
-    years: [2022, 2023, 2024],
+    years: [2018, 2019, 2020, 2021, 2022, 2023, 2024],
     sessions: [
-      { id: "FP1", label: "Free Practice 1" },
-      { id: "FP2", label: "Free Practice 2" },
       { id: "Q", label: "Qualifying" },
       { id: "R", label: "Race" },
     ],
   };
 
-  // ✅ Reset event when year changes
   useEffect(() => {
     if (events.length > 0) {
       setTempEvent(events[0]);
@@ -101,7 +98,7 @@ export default function Home() {
                   {loading && <option>Loading…</option>}
                   {!loading && !error &&
                     events.map((e) => (
-                      <option key={`${e}key`} value={e}>
+                      <option key={`${e}`} value={e}>
                         {e}
                       </option>
                     ))}

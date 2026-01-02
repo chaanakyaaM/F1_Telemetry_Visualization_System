@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 export function useDriverDetails({ year, event, session, driverId }) {
   const [driverDetails, setDriverDetails] = useState(null);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   useEffect(() => {
     if (!driverId) {
@@ -14,7 +16,7 @@ export function useDriverDetails({ year, event, session, driverId }) {
     async function fetchDriverData() {
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/racerDetails/${year}/${event}/${session}/${driverId}`
+          `${backendUrl}/racerDetails/${year}/${event}/${session}/${driverId}`
         );
         const data = await res.json();
         if (!cancelled) setDriverDetails(data);
@@ -28,7 +30,7 @@ export function useDriverDetails({ year, event, session, driverId }) {
     return () => {
       cancelled = true;
     };
-  }, [year, event, session, driverId]);
+  }, [year, event, session, driverId, backendUrl]);
 
   return driverDetails;
 }

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 export function useRaceDetails({ year, event, session }) {
   const [raceDetails, setRaceDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
   useEffect(() => {
     if (!year || !event || !session) return;
@@ -13,7 +15,7 @@ export function useRaceDetails({ year, event, session }) {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/data/${year}/${event}/${session}`
+          `${backendUrl}/data/${year}/${event}/${session}`
         );
         const data = await res.json();
         if (!cancelled) setRaceDetails(data);
@@ -29,7 +31,7 @@ export function useRaceDetails({ year, event, session }) {
     return () => {
       cancelled = true;
     };
-  }, [year, event, session]);
+  }, [year, event, session, backendUrl]);
 
   return { raceDetails, loading };
 }

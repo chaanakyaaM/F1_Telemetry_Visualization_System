@@ -1,70 +1,151 @@
-# Getting Started with Create React App
+# 🏎️ F1 Telemetry Visualization system 
+ 
+This project transforms official F1 telemetry data into an interactive race replay experience, rendering accurate SVG track maps and visualizing live car positions, speed, gear, RPM, throttle, and driver standings. It is designed for engineers, data enthusiasts, and racing fans who want deep insights into real race dynamics.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> **Think of it as a way to review and analyse F1 races using telemetry data.**
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+### 🗺️ Real Track Rendering
+- SVG track paths generated directly from FastF1 coordinates telemetry.
+- Accurate circuit geometry based on real race data.
 
-### `npm start`
+### 🚗 Live Car Positioning
+- Smooth interpolation of car positions based on race time.
+- Cars move accuratly along the racing circuit.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 📊 Dynamic Telemetry
+#### Helps you monitor:
+- Speed (km/h)
+- Gear
+- RPM
+- Throttle (%)
+- Distance traveled
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🧠 Fastest Lap & Full Race Modes
+- Switch between fastest lap from a race and full race telemetry
+- Time-synchronized playback
 
-### `npm test`
+### ⏯️ Playback Controls
+- Play / Pause
+- Speed control
+- Timeline reset
+- Zoom control for track view
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🏁 Live Timing Dashboard
+- Real-time driver list
+- Color-coded drivers
+- Focus on a specific driver
 
-### `npm run build`
+### 🧾 Driver & Session Details Panel
+- Driver name, number, and team
+- Session info (event, location, format)
+- Live telemetry cards
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Drawback
+- High initial data fetch latency, as it loads and processes extensive telemetry data before rendering the track and driver information.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Tech Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Frontend
+- **React** – User Interface
+- **Tailwind CSS** – UI styling
+- **SVG** – Track and telemetry rendering
 
-### `npm run eject`
+### Backend
+- **FastAPI** – High-performance async API
+- **FastF1** – Official Formula 1 telemetry & timing data
+- **AsyncIO** – Non-blocking data processing
+- **LRU Cache** – Optimized session loading
+- **GZip Middleware** – Reduced payload sizes
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 📂 Project Structure
+```
+.
+├── backend/
+│   ├── main.py              # FastAPI server
+│   ├── cache/               # FastF1 cache
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Track.jsx
+│   │   │   ├── MainContainer.jsx
+│   │   │   ├── Racer.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Path.jsx
+│   │   │   ├── RaceDetailsContainer.jsx
+│   │   │   └── CoreContainer.jsx
+│   │   ├── hooks/
+│   │   │   ├── useDriverTelemetry.js
+│   │   │   ├── useDriverDetails.js
+│   │   │   ├── useFullRace.js
+│   │   │   ├── useDrivers.js
+│   │   │   ├── useEvents.js
+│   │   │   ├── useTrack.js
+│   │   │   ├── useFullRace.js
+│   │   │   ├── useFRaceDetails.js
+│   │   │   └── useRacersDashboard.js
+│   │   ├── pages/
+│   │   │   ├── Home.js
+│   │   ├── constants/
+│   │   │   ├── Colors.js
+│   │   │   └── Images.js
+│   ├── App.css
+│   ├── App.js
+│   ├── index.css
+│   ├── index.js
+├── .env
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+# 🎮 How It Works (High Level)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- FastF1 fetches official telemetry data
 
-## Learn More
+- Backend processes & downsamples telemetry
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Frontend syncs telemetry with a race timer
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Car positions are interpolated between telemetry points
 
-### Code Splitting
+- SVG renders live car movement on the track
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Dashboard updates dynamically from shared telemetry state
 
-### Analyzing the Bundle Size
+- No fake data. No animations guessing positions.
+Everything is driven by real telemetry.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# 🚀 Getting Started
 
-### Making a Progressive Web App
+## Frontend
+```
+npm install
+npm run dev
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Backend
+**To know about the backend kindly [visit this repo](https://github.com/chaanakyaaM/F1_Telemetry_Visualization_System_Backend)**
 
-### Advanced Configuration
+# 🧠 Why This Project Matters
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Demonstrates real-time data visualization
 
-### Deployment
+- Shows strong async backend design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Uses real-world motorsport data
 
-### `npm run build` fails to minify
+- Combines frontend animation + backend data engineering
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Perfect for ML / Data / Visualization / Backend portfolios
+
+
+## ⚠️ Challenges Faced
+
+While building this project, several technical and design challenges were encountered and addressed:
+
+- **High initial data latency:** Fetching large telemetry datasets caused delays. This was mitigated using **FastF1 caching**, **LRU caching** and **GZip compression** to speed up backend responses.  
+- **Track size variability:** Not all circuits have the same scale, so a **dynamic zoom feature** was implemented to allow proper visualization of any track.  
+- **Full race data size:** Full race telemetry datasets can be extremely large, so **downsampling** was implemented to reduce data size while maintaining smooth playback.
+- **Asynchronous data fetching:** Multiple API requests for different types of data (drivers, track, telemetry) were handled concurrently using **asyncio**, improving overall load performance.  
+

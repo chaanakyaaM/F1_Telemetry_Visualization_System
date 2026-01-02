@@ -4,6 +4,8 @@ export function useEvents(year) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  
 
   useEffect(() => {
     if (!year) return;
@@ -11,7 +13,7 @@ export function useEvents(year) {
     setLoading(true);
     setError(null);
 
-    fetch(`http://127.0.0.1:8000/events/${year}`)
+    fetch(`${backendUrl}/events/${year}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch events");
         return res.json();
@@ -31,7 +33,7 @@ export function useEvents(year) {
       .finally(() => {
         setLoading(false);
       });
-  }, [year]);
+  }, [year, backendUrl]);
 
   return { events, loading, error };
 }
