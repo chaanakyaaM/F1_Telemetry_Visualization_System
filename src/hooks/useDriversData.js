@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function useDrivers({ year, event_name, session_name }) {
+export function useDriversData({ year, event_name, session_name }) {
   const [driverCodes, setDriverCodes] = useState([]);
   const [driverNames, setDriverNames] = useState({});
   const [loading, setLoading] = useState(true);

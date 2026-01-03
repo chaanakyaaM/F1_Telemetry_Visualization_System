@@ -5,7 +5,7 @@ import MainContainer from "./MainContainer";
 import Dashboard from "./Dashboard";
 import RaceDetailsContainer from "./RaceDetailsContainer";
 import colors from "../constants/Colors";
-import { useDrivers } from "../hooks/useDrivers";
+import { useDriversData } from "../hooks/useDriversData";
 import { useRacersDashboard } from "../hooks/useRacerDashboard";
 
 export default function CoreContainer({ year, event_name, session_name }) {
@@ -14,7 +14,7 @@ export default function CoreContainer({ year, event_name, session_name }) {
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [raceOption, setRaceOption] = useState('fastestLap');
 
-  const { driverCodes, driverNames, loading } = useDrivers({
+  const { driverCodes, driverNames, loading } = useDriversData({
     year,
     event_name,
     session_name,

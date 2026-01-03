@@ -81,7 +81,7 @@ This project transforms official F1 telemetry data into an interactive race repl
 │   │   │   ├── useDriverTelemetry.js
 │   │   │   ├── useDriverDetails.js
 │   │   │   ├── useFullRace.js
-│   │   │   ├── useDrivers.js
+│   │   │   ├── useDriversData.js
 │   │   │   ├── useEvents.js
 │   │   │   ├── useTrack.js
 │   │   │   ├── useFullRace.js
