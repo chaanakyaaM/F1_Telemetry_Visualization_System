@@ -102,17 +102,11 @@ This project transforms official F1 telemetry data into an interactive race repl
 # 🎮 How It Works (High Level)
 
 - FastF1 fetches official telemetry data
-
 - Backend processes & downsamples telemetry
-
 - Frontend syncs telemetry with a race timer
-
 - Car positions are interpolated between telemetry points
-
 - SVG renders live car movement on the track
-
 - Dashboard updates dynamically from shared telemetry state
-
 - No fake data. No animations guessing positions.
 Everything is driven by real telemetry.
 
@@ -125,7 +119,7 @@ npm run dev
 ```
 
 ## Backend
-**To know about the backend kindly [visit this repo](https://github.com/chaanakyaaM/F1_Telemetry_Visualization_System_Backend)**
+**To know about the backend [visit this repo](https://github.com/chaanakyaaM/F1_Telemetry_Visualization_System_Backend)**
 
 # 🧠 Why This Project Matters
 
