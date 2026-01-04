@@ -130,13 +130,9 @@ npm run dev
 # 🧠 Why This Project Matters
 
 - Demonstrates real-time data visualization
-
 - Shows strong async backend design
-
 - Uses real-world motorsport data
-
 - Combines frontend animation + backend data engineering
-
 - Perfect for ML / Data / Visualization / Backend portfolios
 
 
