@@ -11,20 +11,26 @@ export default function Track({
   option, 
   event_name 
 }) {
-  const requestRef = useRef(null);
-  const lastTimeRef = useRef(null);
-  const speedRef = useRef(1);
+  // Refs to maintain values across renders without triggering re-renders
+  const requestRef = useRef(null);      // Stores the animation frame ID
+  const lastTimeRef = useRef(null);     // Stores the timestamp of the previous frame
+  const speedRef = useRef(1);           // Mutable reference to playback speed for the loop
 
   const [playing, setPlaying] = useState(true);
   const [loading, setLoading] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  
-  const [trackPadding, setTrackPadding] = useState(1500);
+  const [trackPadding, setTrackPadding] = useState(1500); // Visual "Zoom" level
 
+  // Keep the speedRef in sync with the state used by the UI slider
   useEffect(() => {
     speedRef.current = playbackSpeed;
   }, [playbackSpeed]);
 
+  /**
+   * Main Animation Loop
+   * Calculates the 'delta' (time between frames) to ensure smooth playback
+   * regardless of the computer's monitor refresh rate.
+   */
   useEffect(() => {
     if (!playing) {
       lastTimeRef.current = null;
@@ -39,6 +45,7 @@ export default function Track({
       const delta = time - lastTimeRef.current;
       lastTimeRef.current = time;
 
+      // Increment race time based on elapsed real time multiplied by speed (e.g., 2x, 5x)
       set_raceTime((t) => t + delta * speedRef.current);
       requestRef.current = requestAnimationFrame(animate);
     };
@@ -57,14 +64,17 @@ export default function Track({
   return (
     <div className="relative w-full h-full bg-slate-950 flex flex-col overflow-hidden">
       
+      {/* Background Track Path: Renders the SVG circuit layout */}
       <div className="flex-1 w-full h-full relative py-1 px-1 transition-all duration-500">
         <Path year={year} event_name={event_name} setLoading={setLoading} padding={trackPadding}>
-          {children}
+          {children} {/* This is where the Racer dots are rendered */}
         </Path>
       </div>
 
+      {/* Floating Control Bar */}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 flex items-center gap-6 px-5 py-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl z-50 transition-all hover:border-slate-500">
         
+        {/* Play/Pause Toggle */}
         <button 
           onClick={() => setPlaying((p) => !p)}
           className="w-12 h-12 flex items-center justify-center rounded-full bg-red-600 hover:bg-red-700 transition-all active:scale-90 shadow-lg shadow-red-900/40"
@@ -76,6 +86,7 @@ export default function Track({
           )}
         </button>
 
+        {/* Playback Speed Slider (0x to 5x) */}
         <div className="flex flex-col min-w-[120px]">
           <div className="flex justify-between items-center mb-1.5">
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Speed</span>
@@ -83,15 +94,14 @@ export default function Track({
           </div>
           <input
             type="range"
-            min="0"
-            max="5"
-            step="1"
+            min="0" max="5" step="1"
             value={playbackSpeed}
             onChange={(e) => setPlaybackSpeed(+e.target.value)}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-red-600 border border-slate-700"
           />
         </div>
 
+        {/* Zoom (Padding) Slider: Adjusts the SVG viewBox scale */}
         <div className="flex flex-col min-w-[120px]">
           <div className="flex justify-between items-center mb-1.5">
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Zoom</span>
@@ -99,9 +109,7 @@ export default function Track({
           </div>
           <input
             type="range"
-            min="500"
-            max="10000"
-            step="100"
+            min="500" max="10000" step="100"
             value={trackPadding}
             onChange={(e) => setTrackPadding(+e.target.value)}
             className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600 border border-slate-700"
@@ -110,61 +118,41 @@ export default function Track({
 
         <div className="h-10 w-[1px] bg-slate-800 mx-1" />
 
+        {/* View Options: Labels and Data Source toggles */}
         <div className="flex gap-3">
-          <button 
-            onClick={handleReset}
-            className="px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all border border-transparent hover:border-slate-700"
-          >
-            Reset
-          </button>
+          <button onClick={handleReset} className="...">Reset</button>
           
           <button 
             onClick={() => set_show(!show)}
-            className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all border shadow-sm ${
-              show 
-                ? "bg-white text-black border-white" 
-                : "text-slate-400 border-slate-800 hover:border-slate-600"
-            }`}
+            className={`... ${show ? "bg-white text-black" : "text-slate-400"}`}
           >
             {show ? "Hide Labels" : "Show Labels"}
           </button>
 
+          {/* Toggle between viewing the single fastest lap vs. the entire race duration */}
           <button 
             onClick={() => setOption("fastestLap")}
-            className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all border shadow-sm ${
-              option === "fastestLap" 
-                ? "bg-red-600 text-white border-red-600" 
-                : "text-slate-400 border-slate-800 hover:border-slate-600"
-            }`}
+            className={`... ${option === "fastestLap" ? "bg-red-600 text-white" : "text-slate-400"}`}
           >
             Fastest
           </button>
 
           <button 
             onClick={() => setOption("fullRace")}
-            className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all border shadow-sm ${
-              option === "fullRace" 
-                ? "bg-red-600 text-white border-red-600" 
-                : "text-slate-400 border-slate-800 hover:border-slate-600"
-            }`}
+            className={`... ${option === "fullRace" ? "bg-red-600 text-white" : "text-slate-400"}`}
           >
             Full Race
           </button>
         </div>
       </div>
 
+      {/* System Status Indicator (Top Left) */}
       <div className="absolute top-6 left-8 pointer-events-none z-40">
         <div className="flex items-center gap-3">
           {loading ? (
-            <>
-              <div className="w-1 h-6 bg-red-600 animate-pulse" />
-              <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.loading'}</span>
-            </>
+            <><div className="w-1 h-6 bg-red-600 animate-pulse" /><span>// System.loading</span></>
           ) : (
-            <>
-              <div className="w-1 h-6 bg-green-600 animate-pulse" />
-              <span className="text-xs font-mono text-slate-500 uppercase tracking-[0.3em]">{'// System.Ready'}</span>
-            </>
+            <><div className="w-1 h-6 bg-green-600 animate-pulse" /><span>// System.Ready</span></>
           )}
         </div>
       </div>

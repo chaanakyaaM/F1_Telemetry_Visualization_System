@@ -139,3 +139,5 @@ While building this project, several technical and design challenges were encoun
 - **Full race data size:** Full race telemetry datasets can be extremely large, so **downsampling** was implemented to reduce data size while maintaining smooth playback.
 - **Asynchronous data fetching:** Multiple API requests for different types of data (drivers, track, telemetry) were handled concurrently using **asyncio**, improving overall load performance.  
 
+NOTE: Images are yet to be corrected.
+

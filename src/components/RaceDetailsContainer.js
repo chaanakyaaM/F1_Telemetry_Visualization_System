@@ -8,7 +8,10 @@ export default function RaceDetailsContainer({
   SelectedDriver,
   driverData,
 }) {
+  // Fetch general race metadata (Location, Event Name, etc.)
   const { raceDetails } = useRaceDetails({ year, event, session });
+
+  // Fetch specific driver metadata (Full Name, Team, Number)
   const driverDetails = useDriverDetails({
     year,
     event,
@@ -17,8 +20,10 @@ export default function RaceDetailsContainer({
   });
 
   return (
+    // Floating sidebar container positioned on the left
     <div className="pointer-events-auto absolute left-4 top-[10%] flex flex-col gap-4 w-[320px] max-h-[100vh] overflow-y-auto no-scrollbar">
       
+      {/* SECTION 1: General Session Information */}
       {raceDetails && (
         <div className="bg-slate-900/90 backdrop-blur-md border border-slate-700 p-4 rounded-xl shadow-xl text-white">
           <h2 className="text-xs font-bold text-red-500 uppercase tracking-widest mb-2 border-b border-slate-700 pb-1">
@@ -45,12 +50,14 @@ export default function RaceDetailsContainer({
         </div>
       )}
 
+      {/* SECTION 2: Live Driver Telemetry (Only shows if a driver is selected) */}
       {SelectedDriver && driverData && driverDetails && (
         <div className="bg-slate-900/90 backdrop-blur-md border border-slate-700 p-4 rounded-xl shadow-xl text-white transition-all duration-300">
           <h2 className="text-xs font-bold text-red-500 uppercase tracking-widest mb-3 border-b border-slate-700 pb-1">
             Live Telemetry
           </h2>
           
+          {/* Driver Profile Header */}
           <div className="flex gap-4">
             <div className="relative shrink-0">
               <img
@@ -76,8 +83,10 @@ export default function RaceDetailsContainer({
             </div>
           </div>
 
+          {/* Telemetry Data Grid: Updates in real-time as driver moves */}
           <div className="grid grid-cols-2 gap-3 mt-4">
 
+            {/* Speed Display */}
             <div className="bg-slate-800/50 p-2 rounded border border-slate-700/50">
               <span className="block text-[10px] uppercase text-slate-400 font-bold">Speed</span>
               <span className="text-xl font-mono text-white">
@@ -85,16 +94,19 @@ export default function RaceDetailsContainer({
               </span>
             </div>
 
+            {/* Gear Display */}
             <div className="bg-slate-800/50 p-2 rounded border border-slate-700/50">
               <span className="block text-[10px] uppercase text-slate-400 font-bold">Gear</span>
               <span className="text-xl font-mono text-red-500">{driverData.ngear || "-"}</span>
             </div>
 
+            {/* RPM Display */}
             <div className="bg-slate-800/50 p-2 rounded border border-slate-700/50">
               <span className="block text-[10px] uppercase text-slate-400 font-bold">RPM</span>
               <span className="text-xl font-mono text-white">{driverData.rpm || 0}</span>
             </div>
 
+            {/* Distance Display */}
             <div className="bg-slate-800/50 p-2 rounded border border-slate-700/50">
               <span className="block text-[10px] uppercase text-slate-400 font-bold">Distance</span>
               <span className="text-xl font-mono text-white">
@@ -102,6 +114,7 @@ export default function RaceDetailsContainer({
               </span>
             </div>
 
+            {/* Throttle Bar: Visual representation of accelerator input */}
             <div className="bg-slate-800/50 p-2 rounded border border-slate-700/50 col-span-2">
               <div className="flex justify-between items-center mb-1">
                 <span className="block text-[10px] uppercase text-slate-400 font-bold">Throttle</span>
