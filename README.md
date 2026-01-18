@@ -4,6 +4,13 @@ This project transforms official F1 telemetry data into an interactive race repl
 
 > **Think of it as a way to review and analyse F1 races using telemetry data.**
 
+
+## Results
+
+🎥 **Result**
+
+[Click here for the results](./Result/f1_telemetry_visualization_system.mp4)
+
 ## ✨ Features
 
 ### 🗺️ Real Track Rendering
@@ -68,6 +75,9 @@ This project transforms official F1 telemetry data into an interactive race repl
 │   ├── cache/               # FastF1 cache
 │
 ├── frontend/
+│   ├── public/
+│   ├── Result/
+│   │   ├── f1_telemetry_visualization_system.mp4
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── Track.jsx

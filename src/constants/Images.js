@@ -1,3 +1,5 @@
+// Images are yet to be fixed
+
 const images = {
     VER: "Max Verstappen.png",
     PER: "Sergio Pérez.png",
